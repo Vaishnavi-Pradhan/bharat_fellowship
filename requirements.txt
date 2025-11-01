@@ -1,0 +1,7 @@
+# requirements.txt
+streamlit
+langchain
+langchain-groq
+langchain-community
+sqlalchemy
+psycopg2-binary
