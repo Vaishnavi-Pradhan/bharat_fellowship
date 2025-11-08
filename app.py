@@ -18,15 +18,6 @@ st.title("🌾 Project Samarth: Tamil Nadu Agri-Climate Q&A")
 st.caption("Ask me complex questions about Tamil Nadu's agricultural production and climate data (2016-2019).")
 
 
-try:
-    DB_URL = "postgresql://postgres.qqxsquonbtkhlcfcytdf:Vaishnavi#25@aws-1-ap-south-1.pooler.supabase.com:5432/postgres"
-    API_KEY = "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"
-except Exception as e:
-    st.error(f"Error in key configuration: {e}")
-    st.stop()
-
-
-
 classifier_prompt_template = """
 You are a classifier. Your job is to classify the user's input into one of three categories:
 'greeting', 'data_query', or 'off_topic'.
@@ -97,32 +88,33 @@ For example, if the data is `[('Thanjavur', 1441111)]`, your answer should be:
 Answer:
 """
 
-
-
 @st.cache_resource(ttl=3600)
 def get_llm():
-    """Initializes and caches the Groq LLM."""
+    """Initializes and caches the Groq LLM by reading from st.secrets."""
     try:
+        api_key = st.secrets["API_KEY"]
+        
         llm = ChatGroq(
             model_name="llama-3.1-8b-instant",
-            groq_api_key=API_KEY,
+            groq_api_key=api_key,
             temperature=0
         )
         return llm
     except Exception as e:
-        st.error(f"Failed to connect to Groq. Check your API key. Error: {e}")
+        st.error(f"Failed to connect to Groq. Have you added your API_KEY to Streamlit's secrets? Error: {e}")
         st.stop()
 
 @st.cache_resource(ttl=3600)
 def get_db():
-    """Initializes and caches the Supabase DB connection."""
+    """Initializes and caches the Supabase DB connection by reading from st.secrets."""
     try:
-        db = SQLDatabase.from_uri(DB_URL)
+        db_url = st.secrets["DB_URL"]
+        
+        db = SQLDatabase.from_uri(db_url)
         return db
     except Exception as e:
-        st.error(f"Failed to connect to Supabase. Check your DB_URL. Error: {e}")
+        st.error(f"Failed to connect to Supabase. Have you added your DB_URL to Streamlit's secrets? Error: {e}")
         st.stop()
-
 
 
 def get_classifier_chain():
