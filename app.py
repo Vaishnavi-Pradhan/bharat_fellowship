@@ -20,7 +20,7 @@ st.caption("Ask me complex questions about Tamil Nadu's agricultural production 
 
 try:
     DB_URL = "postgresql://postgres.qqxsquonbtkhlcfcytdf:Vaishnavi#25@aws-1-ap-south-1.pooler.supabase.com:5432/postgres"
-    API_KEY = "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"
+    API_KEY = "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"
 except Exception as e:
     st.error(f"Error in key configuration: {e}")
     st.stop()
